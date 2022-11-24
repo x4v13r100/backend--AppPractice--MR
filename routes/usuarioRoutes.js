@@ -1,6 +1,8 @@
 import express from 'express';
 import {
-    prueba
+    prueba,
+    registrar,
+    confirmar
 } from '../controllers/usuarioController.js';
 
 
@@ -10,6 +12,10 @@ const router = express.Router();
 
 // Rutas Publicas
 router.get('/prueba', prueba);
+
+// Rutas de gestion CRUD--------------------------------------------------------
+router.post('/', registrar );
+router.get('/confirmar/:token', confirmar);
 
 
 
