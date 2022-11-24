@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuario.js";
+import emailRegistro from "../helper/emailRegistro.js";
 
 
 const prueba = (req, res) => {
