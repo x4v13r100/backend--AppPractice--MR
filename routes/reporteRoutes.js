@@ -3,7 +3,7 @@ import {
     prueba,
     createReportes,
     // getReporte,
-    // getReportes,
+    getReportes,
     // updateReportes,
     // deleteReportes,
 } from '../controllers/reporteController.js';
@@ -14,7 +14,7 @@ const router = express.Router();
 router.get('/prueba', prueba);
 
 // Rutas de gestion CRUD
-// router.get('/get', getReportes);
+router.get('/get', getReportes);
 // router.get('/get/:id', getReporte);
 router.post('/create', createReportes);
 // router.put('/update/:id', updateReportes);

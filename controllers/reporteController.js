@@ -32,8 +32,86 @@ const createReportes = async (req, res) => {
     }
 };
 
+const getReportes = async (req, res) => {
+    try {
+        const Reportes = await Reporte.find();
+        res.send(Reportes);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+const updateReportes = async (req, res) => {
+    const { id } = req.params;
+    const { nombreFinca, tipoError, descripcion, tecnico } = req.body;
+    //console.log(id, nombre, description, precio, stock);
+    //console.log(req.files.image);
+    try {
+        const updateReporte = await Reporte.findById(id);
+        updateReporte.nombreFinca = nombreFinca;
+        updateReporte.tipoError = tipoError;
+        updateReporte.descripcion = descripcion;
+        updateReporte.tecnico = tecnico;
+        if (req.files !== null) {
+            if (req.files.image) {
+                await deleteImage(updateReporte.image.public_id);
+                const result = await uploadImage(req.files.image.tempFilePath); await fs.remove(req.files.image.tempFilePath);
+                updateReporte.image = {
+                    url: result.secure_url,
+                    public_id: result.public_id,
+                };
+            }
+        }
+        await updateReporte.save();
+        console.log(updateReporte);
+        return res.status(200).json(updateReporte);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const deleteReportes = async (req, res) => {
+    try {
+        const reportRemoved = await Reporte.findByIdAndDelete(req.params.id); if (!reportRemoved) {
+            //const error = new Error("Token no valido");
+            return res.sendStatus(404);
+        } else {
+            if (reportRemoved.image.public_id) {
+                await deleteImage(reportRemoved.image.public_id);
+            }
+            return res.status(200).json({
+                msg: "Reporte Eliminado exitosamente"
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+const getReporte = async (req, res) => {
+    try {
+        const OneReport = await Reporte.findById(req.params.id);
+        if (!OneReport) {
+            return res.status(404).json({
+                msg: "No se encontro el Reporte"
+            });
+        } else {
+            return res.json(OneReport);
+        }
+    } catch (error) {
+        return res.status(500).json({ msg: "No se encontro el Reporte Menor" });
+    }
+};
+
+
+
 
 export {
     prueba,
     createReportes,
+    getReportes,
+    updateReportes,
+    deleteReportes,
+    getReporte
 };
